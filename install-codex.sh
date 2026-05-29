@@ -83,8 +83,19 @@ plugin_installed() {
 }
 
 plugin_root() {
-  codex plugin list --marketplace "${MARKETPLACE_NAME}" 2>/dev/null \
+  local listed_path
+  listed_path="$(codex plugin list --marketplace "${MARKETPLACE_NAME}" 2>/dev/null \
     | awk -v plugin="${PLUGIN_NAME}@${MARKETPLACE_NAME}" '$1 == plugin { print $NF; exit }'
+  )"
+  if [[ -n "${listed_path}" && -d "${listed_path}" ]]; then
+    printf '%s\n' "${listed_path}"
+    return
+  fi
+
+  local cache_root="${CODEX_HOME:-${HOME}/.codex}/plugins/cache/${MARKETPLACE_NAME}/${PLUGIN_NAME}"
+  if [[ -d "${cache_root}" ]]; then
+    find "${cache_root}" -mindepth 1 -maxdepth 1 -type d -print | sort | tail -n 1
+  fi
 }
 
 prompt_agent_key() {
