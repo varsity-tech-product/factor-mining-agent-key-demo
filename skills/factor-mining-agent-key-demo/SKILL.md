@@ -243,61 +243,88 @@ successful `job_id` unless the user asks to inspect every job.
 
 ```bash
 JOB_ID="<job_id>"
-OUT_DIR="factor_mining_results/<client_run_id>/${JOB_ID}/step4c"
-python3 - "$JOB_ID" "$OUT_DIR" <<'PY'
+CLIENT_RUN_ID="<client_run_id>"
+JOB_DIR="factor_mining_results/${CLIENT_RUN_ID}/${JOB_ID}"
+CONFIG_PATH="${FACTOR_MINING_AGENT_KEY_DEMO_HOME:-$HOME/.factor-mining-agent-key-demo}/config.json"
+BASE_URL="$(python3 - "$CONFIG_PATH" <<'PY'
 import json
-import os
 import sys
 from pathlib import Path
-from urllib import parse, request
-from urllib.error import HTTPError
-
-job_id = sys.argv[1]
-out_dir = Path(sys.argv[2])
-config_path = Path(os.environ.get("FACTOR_MINING_AGENT_KEY_DEMO_HOME", "~/.factor-mining-agent-key-demo")).expanduser() / "config.json"
-config = json.loads(config_path.read_text(encoding="utf-8"))
-base_url = config["base_url"].rstrip("/")
-api_key = config["api_key"]
-out_dir.mkdir(parents=True, exist_ok=True)
-
-artifacts = [
-    ("Equity curves", ["default_equity_curves.png", "step4c/equity_curves.png"], "equity_curves.png", "image"),
-    ("Time-series profile", ["default_ts_profile_4panel.png", "step4c/ts_profile_4panel.png"], "ts_profile_4panel.png", "image"),
-    ("Grouped return plot", ["default_group_return_plot.png", "step4c/group_return_plot.png"], "group_return_plot.png", "image"),
-    ("Cross-section profile", ["default_cs_profile_4panel.png", "step4c/cs_profile_4panel.png"], "cs_profile_4panel.png", "image"),
-    ("Cross-section NAV curves", ["default_cs_nav_curves.png", "step4c/cs_nav_curves.png"], "cs_nav_curves.png", "image"),
-    ("Trade log", ["default_trade_log.csv", "step4c/trade_log.csv"], "trade_log.csv", "table"),
-]
-
-result = []
-for label, candidates, file_name, kind in artifacts:
-    item = {"label": label, "file_name": file_name, "kind": kind, "status": "unavailable"}
-    for name in candidates:
-        url = f"{base_url}/jobs/{parse.quote(job_id, safe='')}/files/{parse.quote(name, safe='')}"
-        req = request.Request(url, headers={"Authorization": f"Bearer {api_key}"})
-        try:
-            with request.urlopen(req, timeout=30) as response:
-                payload = response.read()
-        except HTTPError as exc:
-            if exc.code in (404, 410):
-                continue
-            raise
-        path = out_dir / file_name
-        path.write_bytes(payload)
-        item = {
-            "label": label,
-            "file_name": file_name,
-            "kind": kind,
-            "status": "available",
-            "path": str(path),
-            "relative_path": str(path),
-            "source_name": name,
-        }
-        break
-    result.append(item)
-
-print(json.dumps({"ok": True, "job_id": job_id, "output_dir": str(out_dir), "artifacts": result}, separators=(",", ":")))
+print(json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))["base_url"].rstrip("/"))
 PY
+)"
+API_KEY="$(python3 - "$CONFIG_PATH" <<'PY'
+import json
+import sys
+from pathlib import Path
+print(json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))["api_key"])
+PY
+)"
+
+fetch_artifact() {
+  local job_id="$1" name="$2" out="$3"
+  local code headers url
+  mkdir -p "$(dirname "${out}")"
+  headers="$(mktemp)"
+
+  # Try the service file path first. Do not use -L here; if the service returns
+  # a presigned Location, follow it separately without the local Bearer token.
+  code=$(curl -sS -D "${headers}" -o "${out}" -w "%{http_code}" \
+           -H "Authorization: Bearer ${API_KEY}" \
+           "${BASE_URL}/jobs/${job_id}/files/${name}")
+  if [ "${code}" = "200" ]; then
+    rm -f "${headers}"
+    return 0
+  fi
+
+  if [ "${code}" = "301" ] || [ "${code}" = "302" ] || [ "${code}" = "303" ] || [ "${code}" = "307" ] || [ "${code}" = "308" ]; then
+    url=$(python3 - "${headers}" <<'PY'
+import sys
+from pathlib import Path
+for line in Path(sys.argv[1]).read_text(errors="ignore").splitlines():
+    if line.lower().startswith("location:"):
+        print(line.split(":", 1)[1].strip())
+        break
+PY
+)
+    if [ -n "${url}" ]; then
+      code=$(curl -sSL -o "${out}" -w "%{http_code}" "${url}")
+      if [ "${code}" = "200" ]; then
+        rm -f "${headers}"
+        return 0
+      fi
+    fi
+  fi
+
+  if [ "${code}" = "404" ] || [ "${code}" = "410" ]; then
+    # Fall back to a presigned URL. The Bearer token is used only to ask the
+    # Factor Mining API for the URL; the presigned URL download has no auth header.
+    url=$(curl -sS -H "Authorization: Bearer ${API_KEY}" \
+            "${BASE_URL}/jobs/${job_id}/files/${name}?as=url" \
+          | python3 -c "import sys,json; print(json.load(sys.stdin).get('url',''))")
+    if [ -n "${url}" ]; then
+      code=$(curl -sSL -o "${out}" -w "%{http_code}" "${url}")
+      if [ "${code}" = "200" ]; then
+        rm -f "${headers}"
+        return 0
+      fi
+    fi
+  fi
+
+  rm -f "${headers}" "${out}"
+  echo "skip ${name} (http=${code})"
+  return 1
+}
+
+mkdir -p "${JOB_DIR}/step4c"
+fetch_artifact "${JOB_ID}" default_factor_card.json      "${JOB_DIR}/factor_card_default.json" || true
+fetch_artifact "${JOB_ID}" default_factor_card.txt       "${JOB_DIR}/factor_card_default.txt" || true
+fetch_artifact "${JOB_ID}" default_equity_curves.png     "${JOB_DIR}/step4c/equity_curves.png" || true
+fetch_artifact "${JOB_ID}" default_ts_profile_4panel.png "${JOB_DIR}/step4c/ts_profile_4panel.png" || true
+fetch_artifact "${JOB_ID}" default_trade_log.csv         "${JOB_DIR}/step4c/trade_log.csv" || true
+fetch_artifact "${JOB_ID}" default_group_return_plot.png "${JOB_DIR}/step4c/group_return_plot.png" || true
+fetch_artifact "${JOB_ID}" default_cs_profile_4panel.png "${JOB_DIR}/step4c/cs_profile_4panel.png" || true
+fetch_artifact "${JOB_ID}" default_cs_nav_curves.png     "${JOB_DIR}/step4c/cs_nav_curves.png" || true
 ```
 
 In the final Codex Desktop response, embed every available PNG directly with
