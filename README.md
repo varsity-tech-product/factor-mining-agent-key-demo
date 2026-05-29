@@ -1,4 +1,4 @@
-# Factor Mining Agent Key Demo
+# Factor Mining Demo
 
 Demo Codex plugin for the direct Factor Mining Agent API Key flow.
 
@@ -35,7 +35,7 @@ curl -fsSL https://raw.githubusercontent.com/varsity-tech-product/factor-mining-
 ```bash
 codex plugin marketplace add varsity-tech-product/factor-mining-agent-key-demo --ref main
 codex plugin add factor-mining-agent-key-demo@factor-mining-agent-key-demo-marketplace
-PLUGIN_ROOT="$(find "${CODEX_HOME:-$HOME/.codex}/plugins/cache/factor-mining-agent-key-demo-marketplace/factor-mining-agent-key-demo" -mindepth 1 -maxdepth 1 -type d -print | sort | tail -n 1)" && python3 "$PLUGIN_ROOT/scripts/factor_setup.py" && codex "Use the Factor Mining Agent Key Demo plugin. Verify Factor Mining status, then show me the Factor Mining public task list. Do not create a session until I choose a public task or provide a custom idea. Then write a valid plugin.py locally, upload it, wait for the backtest, fetch the default factor card if available, and summarize the result."
+PLUGIN_ROOT="$(find "${CODEX_HOME:-$HOME/.codex}/plugins/cache/factor-mining-agent-key-demo-marketplace/factor-mining-agent-key-demo" -mindepth 1 -maxdepth 1 -type d -print | sort | tail -n 1)" && python3 "$PLUGIN_ROOT/scripts/factor_setup.py" && codex "Use the Factor Mining Demo plugin. Verify Factor Mining status, then show me the Factor Mining public task list. Do not create a session until I choose a public task or provide a custom idea. Then write a valid plugin.py locally, upload it, wait for the backtest, fetch the default factor card if available, and summarize the result."
 ```
 
 ## Codex Desktop Install
@@ -46,7 +46,7 @@ In Codex Desktop, add this marketplace:
 - Git ref: `main`
 - Sparse paths: leave empty
 
-Then install `Factor Mining Agent Key Demo` from the marketplace.
+Then install `Factor Mining Demo` from the marketplace.
 
 To configure the `vt_` Agent API Key before opening Desktop:
 
@@ -59,7 +59,7 @@ PLUGIN_ROOT="$(find "${CODEX_HOME:-$HOME/.codex}/plugins/cache/factor-mining-age
 Open Codex Desktop and start a new chat with:
 
 ```text
-Use the Factor Mining Agent Key Demo plugin. Verify Factor Mining status, then show me the Factor Mining public task list. Do not create a session until I choose a public task or provide a custom idea. Then write a valid plugin.py locally, upload it, wait for the backtest, fetch the default factor card if available, and summarize the result.
+Use the Factor Mining Demo plugin. Verify Factor Mining status, then show me the Factor Mining public task list. Do not create a session until I choose a public task or provide a custom idea. Then write a valid plugin.py locally, upload it, wait for the backtest, fetch the default factor card if available, and summarize the result.
 ```
 
 ## Switch Keys

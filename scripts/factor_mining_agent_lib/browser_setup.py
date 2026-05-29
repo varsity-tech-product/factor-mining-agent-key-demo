@@ -153,7 +153,7 @@ def _setup_page(error: str | None) -> str:
 </head>
 <body>
   <main>
-    <h1>Configure Factor Mining Agent Key Demo</h1>
+    <h1>Configure Factor Mining Demo</h1>
     <p>Paste your Factor Mining Agent API Key. The key is sent only to this local setup helper and is not shown in chat.</p>
     {error_html}
     <form method="post" autocomplete="off">

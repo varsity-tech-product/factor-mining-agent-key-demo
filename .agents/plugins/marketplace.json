@@ -1,7 +1,7 @@
 {
   "name": "factor-mining-agent-key-demo-marketplace",
   "interface": {
-    "displayName": "Factor Mining Agent Key Demo"
+    "displayName": "Factor Mining Demo"
   },
   "plugins": [
     {

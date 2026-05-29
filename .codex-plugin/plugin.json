@@ -19,7 +19,7 @@
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Factor Mining Agent Key Demo",
+    "displayName": "Factor Mining Demo",
     "shortDescription": "Demo the direct vt_ Agent API Key flow for backtested plugin.py factors.",
     "longDescription": "A Codex demo plugin for the traditional Factor Mining local-agent flow: enter a vt_ Agent API Key locally, let Codex write plugin.py from a public task or custom idea, upload the factor, wait for the backtest, retrieve artifacts, and summarize results.",
     "developerName": "Varsity Tech Product",
@@ -30,10 +30,10 @@
     ],
     "websiteURL": "https://github.com/varsity-tech-product/factor-mining-agent-key-demo",
     "defaultPrompt": [
-      "Show me the Factor Mining public task list with the Agent Key Demo.",
-      "Use the Factor Mining Agent Key Demo with my custom factor idea.",
-      "Switch the Factor Mining Agent Key Demo to a different vt_ key.",
-      "Resume my Factor Mining Agent Key Demo run and summarize results."
+      "Show me the Factor Mining public task list with the Demo.",
+      "Use the Factor Mining Demo with my custom factor idea.",
+      "Switch the Factor Mining Demo to a different vt_ key.",
+      "Resume my Factor Mining Demo run and summarize results."
     ],
     "brandColor": "#0F766E"
   }

@@ -9,7 +9,7 @@ START_MODE="${FACTOR_MINING_AGENT_KEY_DEMO_START_MODE:-cli}"
 SKIP_SETUP="${FACTOR_MINING_AGENT_KEY_DEMO_SKIP_SETUP:-0}"
 FORCE_SETUP="${FACTOR_MINING_AGENT_KEY_DEMO_FORCE_SETUP:-0}"
 WORKSPACE_PATH="${FACTOR_MINING_AGENT_KEY_DEMO_WORKSPACE:-.}"
-CODEX_PROMPT="${FACTOR_MINING_AGENT_KEY_DEMO_PROMPT:-Use the Factor Mining Agent Key Demo plugin. Verify Factor Mining status, then show me the Factor Mining public task list. Do not create a session until I choose a public task or provide a custom idea. Then write a valid plugin.py locally, upload it, wait for the backtest, fetch the default factor card if available, and summarize the result. If I need to use a different vt_ Agent API Key, run python3 scripts/factor_setup.py --browser and do not ask me to paste the key into chat.}"
+CODEX_PROMPT="${FACTOR_MINING_AGENT_KEY_DEMO_PROMPT:-Use the Factor Mining Demo plugin. Verify Factor Mining status, then show me the Factor Mining public task list. Do not create a session until I choose a public task or provide a custom idea. Then write a valid plugin.py locally, upload it, wait for the backtest, fetch the default factor card if available, and summarize the result. If I need to use a different vt_ Agent API Key, run python3 scripts/factor_setup.py --browser and do not ask me to paste the key into chat.}"
 
 if [[ "${FACTOR_MINING_AGENT_KEY_DEMO_START_CODEX:-1}" == "0" ]]; then
   START_MODE="none"
@@ -126,7 +126,7 @@ configure_factor_mining() {
     return
   fi
   if [[ "${FORCE_SETUP}" != "1" ]] && python3 "${root}/scripts/factor_status.py" >/dev/null 2>&1; then
-    echo "Factor Mining Agent Key Demo is already configured."
+    echo "Factor Mining Demo is already configured."
     return
   fi
 

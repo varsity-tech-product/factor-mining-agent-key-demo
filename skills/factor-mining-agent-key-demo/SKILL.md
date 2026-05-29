@@ -3,9 +3,9 @@ name: factor-mining-agent-key-demo
 description: "Use when the user wants Codex to demonstrate the direct vt_ Agent API Key Factor Mining flow: create or submit a plugin.py, run a user-scoped backtest, wait for workflow and job results, fetch artifacts, summarize outcomes, or resume a local-agent run through the bundled helper scripts."
 ---
 
-# Factor Mining Agent Key Demo
+# Factor Mining Demo
 
-Use this skill for the Factor Mining Agent Key Demo flow. Codex writes or
+Use this skill for the Factor Mining Demo flow. Codex writes or
 locates one local `plugin.py`. Factor Mining validates, stores, backtests, and
 returns workflow, job, artifact, and factor result data through orchestrator
 APIs. This demo uses a direct `vt_` Factor Mining Agent API Key entered locally.
