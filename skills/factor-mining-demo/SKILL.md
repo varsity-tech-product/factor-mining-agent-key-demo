@@ -1,5 +1,5 @@
 ---
-name: factor-mining-agent-key-demo
+name: factor-mining-demo
 description: "Use when the user wants Codex to demonstrate the direct vt_ Agent API Key Factor Mining flow: create or submit a plugin.py, run a user-scoped backtest, wait for workflow and job results, fetch artifacts, summarize outcomes, or resume a local-agent run through the bundled helper scripts."
 ---
 
@@ -61,13 +61,13 @@ returns `403`, tell the user the key is not an external-agent credential.
 Configuration is stored outside project repositories at:
 
 ```text
-~/.factor-mining-agent-key-demo/config.json
+~/.factor-mining-demo/config.json
 ```
 
 Run state is stored at:
 
 ```text
-~/.factor-mining-agent-key-demo/runs/<client_run_id>.json
+~/.factor-mining-demo/runs/<client_run_id>.json
 ```
 
 ## Hard Security Rules
@@ -245,7 +245,7 @@ successful `job_id` unless the user asks to inspect every job.
 JOB_ID="<job_id>"
 CLIENT_RUN_ID="<client_run_id>"
 JOB_DIR="factor_mining_results/${CLIENT_RUN_ID}/${JOB_ID}"
-CONFIG_PATH="${FACTOR_MINING_AGENT_KEY_DEMO_HOME:-$HOME/.factor-mining-agent-key-demo}/config.json"
+CONFIG_PATH="${FACTOR_MINING_DEMO_HOME:-$HOME/.factor-mining-demo}/config.json"
 BASE_URL="$(python3 - "$CONFIG_PATH" <<'PY'
 import json
 import sys

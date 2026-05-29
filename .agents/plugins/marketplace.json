@@ -1,14 +1,14 @@
 {
-  "name": "factor-mining-agent-key-demo-marketplace",
+  "name": "factor-mining-demo-marketplace",
   "interface": {
     "displayName": "Factor Mining Demo"
   },
   "plugins": [
     {
-      "name": "factor-mining-agent-key-demo",
+      "name": "factor-mining-demo",
       "source": {
         "source": "url",
-        "url": "https://github.com/varsity-tech-product/factor-mining-agent-key-demo.git",
+        "url": "https://github.com/varsity-tech-product/factor-mining-demo.git",
         "ref": "main"
       },
       "policy": {

@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-MARKETPLACE_SOURCE="${FACTOR_MINING_AGENT_KEY_DEMO_SOURCE:-varsity-tech-product/factor-mining-agent-key-demo}"
-MARKETPLACE_REF="${FACTOR_MINING_AGENT_KEY_DEMO_REF:-main}"
-MARKETPLACE_NAME="${FACTOR_MINING_AGENT_KEY_DEMO_MARKETPLACE:-factor-mining-agent-key-demo-marketplace}"
-PLUGIN_NAME="${FACTOR_MINING_AGENT_KEY_DEMO_PLUGIN:-factor-mining-agent-key-demo}"
-START_MODE="${FACTOR_MINING_AGENT_KEY_DEMO_START_MODE:-cli}"
-SKIP_SETUP="${FACTOR_MINING_AGENT_KEY_DEMO_SKIP_SETUP:-0}"
-FORCE_SETUP="${FACTOR_MINING_AGENT_KEY_DEMO_FORCE_SETUP:-0}"
-WORKSPACE_PATH="${FACTOR_MINING_AGENT_KEY_DEMO_WORKSPACE:-.}"
-CODEX_PROMPT="${FACTOR_MINING_AGENT_KEY_DEMO_PROMPT:-Use the Factor Mining Demo plugin. Verify Factor Mining status, then show me the Factor Mining public task list. Do not create a session until I choose a public task or provide a custom idea. Then write a valid plugin.py locally, upload it, wait for the backtest, fetch the default factor card if available, and summarize the result. If I need to use a different vt_ Agent API Key, run python3 scripts/factor_setup.py --browser and do not ask me to paste the key into chat.}"
+MARKETPLACE_SOURCE="${FACTOR_MINING_DEMO_SOURCE:-varsity-tech-product/factor-mining-demo}"
+MARKETPLACE_REF="${FACTOR_MINING_DEMO_REF:-main}"
+MARKETPLACE_NAME="${FACTOR_MINING_DEMO_MARKETPLACE:-factor-mining-demo-marketplace}"
+PLUGIN_NAME="${FACTOR_MINING_DEMO_PLUGIN:-factor-mining-demo}"
+START_MODE="${FACTOR_MINING_DEMO_START_MODE:-cli}"
+SKIP_SETUP="${FACTOR_MINING_DEMO_SKIP_SETUP:-0}"
+FORCE_SETUP="${FACTOR_MINING_DEMO_FORCE_SETUP:-0}"
+WORKSPACE_PATH="${FACTOR_MINING_DEMO_WORKSPACE:-.}"
+CODEX_PROMPT="${FACTOR_MINING_DEMO_PROMPT:-Use the Factor Mining Demo plugin. Verify Factor Mining status, then show me the Factor Mining public task list. Do not create a session until I choose a public task or provide a custom idea. Then write a valid plugin.py locally, upload it, wait for the backtest, fetch the default factor card if available, and summarize the result. If I need to use a different vt_ Agent API Key, run python3 scripts/factor_setup.py --browser and do not ask me to paste the key into chat.}"
 
-if [[ "${FACTOR_MINING_AGENT_KEY_DEMO_START_CODEX:-1}" == "0" ]]; then
+if [[ "${FACTOR_MINING_DEMO_START_CODEX:-1}" == "0" ]]; then
   START_MODE="none"
 fi
 
@@ -106,7 +106,7 @@ prompt_agent_key() {
   fi
   if [[ ! -r /dev/tty ]]; then
     echo "A terminal is required to enter the Factor Mining Agent API Key securely." >&2
-    echo "Run this script from an interactive terminal, or set FACTOR_MINING_AGENT_KEY_DEMO_SKIP_SETUP=1 and configure setup later." >&2
+    echo "Run this script from an interactive terminal, or set FACTOR_MINING_DEMO_SKIP_SETUP=1 and configure setup later." >&2
     exit 1
   fi
   printf 'Paste Factor Mining Agent API Key (input hidden): ' >/dev/tty
@@ -122,7 +122,7 @@ prompt_agent_key() {
 configure_factor_mining() {
   local root="$1"
   if [[ "${SKIP_SETUP}" == "1" ]]; then
-    echo "Skipping Factor Mining setup because FACTOR_MINING_AGENT_KEY_DEMO_SKIP_SETUP=1."
+    echo "Skipping Factor Mining setup because FACTOR_MINING_DEMO_SKIP_SETUP=1."
     return
   fi
   if [[ "${FORCE_SETUP}" != "1" ]] && python3 "${root}/scripts/factor_status.py" >/dev/null 2>&1; then

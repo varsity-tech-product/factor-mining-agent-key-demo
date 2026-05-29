@@ -1,13 +1,13 @@
 {
-  "name": "factor-mining-agent-key-demo",
+  "name": "factor-mining-demo",
   "version": "0.1.0",
   "description": "Demo Codex plugin for the direct vt_ Agent API Key Factor Mining workflow.",
   "author": {
     "name": "Varsity Tech Product",
     "url": "https://github.com/varsity-tech-product"
   },
-  "homepage": "https://github.com/varsity-tech-product/factor-mining-agent-key-demo",
-  "repository": "https://github.com/varsity-tech-product/factor-mining-agent-key-demo",
+  "homepage": "https://github.com/varsity-tech-product/factor-mining-demo",
+  "repository": "https://github.com/varsity-tech-product/factor-mining-demo",
   "license": "Apache-2.0",
   "keywords": [
     "factor-mining",
@@ -28,7 +28,7 @@
       "Interactive",
       "Write"
     ],
-    "websiteURL": "https://github.com/varsity-tech-product/factor-mining-agent-key-demo",
+    "websiteURL": "https://github.com/varsity-tech-product/factor-mining-demo",
     "defaultPrompt": [
       "Show me the Factor Mining public task list with the Demo.",
       "Use the Factor Mining Demo with my custom factor idea.",

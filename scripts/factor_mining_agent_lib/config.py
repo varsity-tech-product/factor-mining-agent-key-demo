@@ -6,9 +6,9 @@ from pathlib import Path
 from typing import Any, Mapping
 
 
-DEFAULT_HOME = Path.home() / ".factor-mining-agent-key-demo"
+DEFAULT_HOME = Path.home() / ".factor-mining-demo"
 DEFAULT_BASE_URL = "https://d25q1jf66e8y4g.cloudfront.net"
-HOME_ENV = "FACTOR_MINING_AGENT_KEY_DEMO_HOME"
+HOME_ENV = "FACTOR_MINING_DEMO_HOME"
 
 
 class ConfigError(RuntimeError):

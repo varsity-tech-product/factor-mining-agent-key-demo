@@ -17,7 +17,7 @@ Do not paste the key into Codex chat.
 Run:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/varsity-tech-product/factor-mining-agent-key-demo/main/install-codex.sh | bash
+curl -fsSL https://raw.githubusercontent.com/varsity-tech-product/factor-mining-demo/main/install-codex.sh | bash
 ```
 
 The installer adds the marketplace, installs the plugin, asks for the `vt_`
@@ -27,22 +27,22 @@ demo workflow prompt.
 To install without starting Codex:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/varsity-tech-product/factor-mining-agent-key-demo/main/install-codex.sh | FACTOR_MINING_AGENT_KEY_DEMO_START_CODEX=0 bash
+curl -fsSL https://raw.githubusercontent.com/varsity-tech-product/factor-mining-demo/main/install-codex.sh | FACTOR_MINING_DEMO_START_CODEX=0 bash
 ```
 
 ## Manual CLI Install
 
 ```bash
-codex plugin marketplace add varsity-tech-product/factor-mining-agent-key-demo --ref main
-codex plugin add factor-mining-agent-key-demo@factor-mining-agent-key-demo-marketplace
-PLUGIN_ROOT="$(find "${CODEX_HOME:-$HOME/.codex}/plugins/cache/factor-mining-agent-key-demo-marketplace/factor-mining-agent-key-demo" -mindepth 1 -maxdepth 1 -type d -print | sort | tail -n 1)" && python3 "$PLUGIN_ROOT/scripts/factor_setup.py" && codex "Use the Factor Mining Demo plugin. Verify Factor Mining status, then show me the Factor Mining public task list. Do not create a session until I choose a public task or provide a custom idea. Then write a valid plugin.py locally, upload it, wait for the backtest, fetch the default factor card if available, and summarize the result."
+codex plugin marketplace add varsity-tech-product/factor-mining-demo --ref main
+codex plugin add factor-mining-demo@factor-mining-demo-marketplace
+PLUGIN_ROOT="$(find "${CODEX_HOME:-$HOME/.codex}/plugins/cache/factor-mining-demo-marketplace/factor-mining-demo" -mindepth 1 -maxdepth 1 -type d -print | sort | tail -n 1)" && python3 "$PLUGIN_ROOT/scripts/factor_setup.py" && codex "Use the Factor Mining Demo plugin. Verify Factor Mining status, then show me the Factor Mining public task list. Do not create a session until I choose a public task or provide a custom idea. Then write a valid plugin.py locally, upload it, wait for the backtest, fetch the default factor card if available, and summarize the result."
 ```
 
 ## Codex Desktop Install
 
 In Codex Desktop, add this marketplace:
 
-- Source: `varsity-tech-product/factor-mining-agent-key-demo`
+- Source: `varsity-tech-product/factor-mining-demo`
 - Git ref: `main`
 - Sparse paths: leave empty
 
@@ -51,9 +51,9 @@ Then install `Factor Mining Demo` from the marketplace.
 To configure the `vt_` Agent API Key before opening Desktop:
 
 ```bash
-codex plugin marketplace add varsity-tech-product/factor-mining-agent-key-demo --ref main
-codex plugin add factor-mining-agent-key-demo@factor-mining-agent-key-demo-marketplace
-PLUGIN_ROOT="$(find "${CODEX_HOME:-$HOME/.codex}/plugins/cache/factor-mining-agent-key-demo-marketplace/factor-mining-agent-key-demo" -mindepth 1 -maxdepth 1 -type d -print | sort | tail -n 1)" && python3 "$PLUGIN_ROOT/scripts/factor_setup.py"
+codex plugin marketplace add varsity-tech-product/factor-mining-demo --ref main
+codex plugin add factor-mining-demo@factor-mining-demo-marketplace
+PLUGIN_ROOT="$(find "${CODEX_HOME:-$HOME/.codex}/plugins/cache/factor-mining-demo-marketplace/factor-mining-demo" -mindepth 1 -maxdepth 1 -type d -print | sort | tail -n 1)" && python3 "$PLUGIN_ROOT/scripts/factor_setup.py"
 ```
 
 Open Codex Desktop and start a new chat with:
@@ -78,13 +78,13 @@ local page, not into chat.
 Configuration is stored at:
 
 ```text
-~/.factor-mining-agent-key-demo/config.json
+~/.factor-mining-demo/config.json
 ```
 
 Run state is stored at:
 
 ```text
-~/.factor-mining-agent-key-demo/runs/
+~/.factor-mining-demo/runs/
 ```
 
 ## License
