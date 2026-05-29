@@ -236,6 +236,82 @@ artifact `404` and `410` as unavailable and continues with the core job result.
 Authentication, authorization, network, malformed response, and server errors
 must fail clearly with redacted stderr.
 
+After a successful backtest, fetch the default-parameter backtest
+visualizations from the completed job and save them inside the current
+workspace so Codex Desktop can render them in the reply. Use the first
+successful `job_id` unless the user asks to inspect every job.
+
+```bash
+JOB_ID="<job_id>"
+OUT_DIR="factor_mining_results/<client_run_id>/${JOB_ID}/step4c"
+python3 - "$JOB_ID" "$OUT_DIR" <<'PY'
+import json
+import os
+import sys
+from pathlib import Path
+from urllib import parse, request
+from urllib.error import HTTPError
+
+job_id = sys.argv[1]
+out_dir = Path(sys.argv[2])
+config_path = Path(os.environ.get("FACTOR_MINING_AGENT_KEY_DEMO_HOME", "~/.factor-mining-agent-key-demo")).expanduser() / "config.json"
+config = json.loads(config_path.read_text(encoding="utf-8"))
+base_url = config["base_url"].rstrip("/")
+api_key = config["api_key"]
+out_dir.mkdir(parents=True, exist_ok=True)
+
+artifacts = [
+    ("Equity curves", ["default_equity_curves.png", "step4c/equity_curves.png"], "equity_curves.png", "image"),
+    ("Time-series profile", ["default_ts_profile_4panel.png", "step4c/ts_profile_4panel.png"], "ts_profile_4panel.png", "image"),
+    ("Grouped return plot", ["default_group_return_plot.png", "step4c/group_return_plot.png"], "group_return_plot.png", "image"),
+    ("Cross-section profile", ["default_cs_profile_4panel.png", "step4c/cs_profile_4panel.png"], "cs_profile_4panel.png", "image"),
+    ("Cross-section NAV curves", ["default_cs_nav_curves.png", "step4c/cs_nav_curves.png"], "cs_nav_curves.png", "image"),
+    ("Trade log", ["default_trade_log.csv", "step4c/trade_log.csv"], "trade_log.csv", "table"),
+]
+
+result = []
+for label, candidates, file_name, kind in artifacts:
+    item = {"label": label, "file_name": file_name, "kind": kind, "status": "unavailable"}
+    for name in candidates:
+        url = f"{base_url}/jobs/{parse.quote(job_id, safe='')}/files/{parse.quote(name, safe='')}"
+        req = request.Request(url, headers={"Authorization": f"Bearer {api_key}"})
+        try:
+            with request.urlopen(req, timeout=30) as response:
+                payload = response.read()
+        except HTTPError as exc:
+            if exc.code in (404, 410):
+                continue
+            raise
+        path = out_dir / file_name
+        path.write_bytes(payload)
+        item = {
+            "label": label,
+            "file_name": file_name,
+            "kind": kind,
+            "status": "available",
+            "path": str(path),
+            "relative_path": str(path),
+            "source_name": name,
+        }
+        break
+    result.append(item)
+
+print(json.dumps({"ok": True, "job_id": job_id, "output_dir": str(out_dir), "artifacts": result}, separators=(",", ":")))
+PY
+```
+
+In the final Codex Desktop response, embed every available PNG directly with
+Markdown image syntax, using the saved relative paths. Do not merely list the
+paths. Example:
+
+```markdown
+![Equity curves](factor_mining_results/<client_run_id>/<job_id>/step4c/equity_curves.png)
+![Time-series profile](factor_mining_results/<client_run_id>/<job_id>/step4c/ts_profile_4panel.png)
+```
+
+If a visualization is unavailable, omit that image and briefly say it was not
+available. Report the trade log as a saved CSV path when present.
+
 Use resume with waiting after an interrupted Codex session:
 
 ```bash
